@@ -8,7 +8,7 @@ export interface ISessionItem {
   attributes: {
     from: string;
     to: string;
-  },
+  };
   relationships: {
     performance: {
       data: {
