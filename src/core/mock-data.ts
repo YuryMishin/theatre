@@ -1,4 +1,6 @@
-export const sessions = {
+import {IPerformance, ISession} from './models/theatre.model';
+
+export const sessions: ISession = {
   data: [
     {
       id: '1',
@@ -99,7 +101,7 @@ export const sessions = {
   ]
 };
 
-export const performances = {
+export const performances: IPerformance = {
   data: [
     {
       id: '1',

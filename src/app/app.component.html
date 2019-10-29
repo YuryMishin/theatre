@@ -1,1 +1,71 @@
-<div class="main-bgd"></div>
+<div class="main-bgd f-center">
+  <div class="f-center">
+    <mat-horizontal-stepper [linear]="true" #stepper>
+      <mat-step>
+        <ng-template matStepLabel>Выбор спектакля</ng-template>
+        <div style="display: flex;">
+          <ng-container *ngFor="let performance of performances">
+            <mat-card class="ctn-performance">
+              <mat-card-header>
+                <mat-card-title class="c-w">{{performance.attributes.title}}</mat-card-title>
+                <mat-card-subtitle>
+                  <mat-chip-list>
+                    <mat-chip [style.background]="genre | stringToColor"
+                              [style.color]="'black'"
+                              *ngFor="let genre of performance.attributes.genres;">
+                      {{genre}}
+                    </mat-chip>
+                  </mat-chip-list>
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <ng-container *ngFor="let session of sessions">
+                  <button *ngIf="performance.id === session.relationships.performance.data.id" mat-raised-button matStepperNext>
+                   <span>{{session.attributes.from | date: 'longDate'}}</span><br>
+                    <span>{{session.attributes.from | date: 'shortTime'}} - {{session.attributes.to | date: 'shortTime'}}</span>
+                  </button>
+                </ng-container>
+
+              </mat-card-content>
+
+            </mat-card>
+          </ng-container>
+        </div>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Заполнение данных</ng-template>
+
+        <form [formGroup]="clientForm" class="f-center">
+          <mat-form-field>
+            <input matInput placeholder="Имя">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput placeholder="Фамилия">
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Дата рождения" class="c-w">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </form>
+        <div>
+          <button mat-button matStepperPrevious>Back</button>
+          <button mat-button (click)="stepper.reset()">Reset</button>
+        </div>
+      </mat-step>
+
+      <mat-step>
+        <ng-template matStepLabel>Оплата</ng-template>
+        You are now done.
+        <div>
+          <button mat-button matStepperPrevious>Назад</button>
+          <button mat-button (click)="stepper.reset()">Сброс</button>
+        </div>
+      </mat-step>
+
+    </mat-horizontal-stepper>
+  </div>
+</div>
