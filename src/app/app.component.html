@@ -7,7 +7,7 @@
           <ng-container *ngFor="let performance of performances">
             <mat-card class="ctn-performance">
               <mat-card-header>
-                <mat-card-title class="c-w">{{performance.attributes.title}}</mat-card-title>
+                <mat-card-title>{{performance.attributes.title}}</mat-card-title>
                 <mat-card-subtitle>
                   <mat-chip-list>
                     <mat-chip [style.background]="genre | stringToColor"
@@ -20,9 +20,11 @@
               </mat-card-header>
               <mat-card-content>
                 <ng-container *ngFor="let session of sessions">
-                  <button *ngIf="performance.id === session.relationships.performance.data.id" mat-raised-button matStepperNext>
-                   <span>{{session.attributes.from | date: 'longDate'}}</span><br>
-                    <span>{{session.attributes.from | date: 'shortTime'}} - {{session.attributes.to | date: 'shortTime'}}</span>
+                  <button *ngIf="performance.id === session.relationships.performance.data.id" mat-raised-button
+                          matStepperNext>
+                    <span>{{session.attributes.from | date: 'longDate'}}</span><br>
+                    <span>{{session.attributes.from | date: 'shortTime'}}
+                      - {{session.attributes.to | date: 'shortTime'}}</span>
                   </button>
                 </ng-container>
 
@@ -36,24 +38,45 @@
       <mat-step>
         <ng-template matStepLabel>Заполнение данных</ng-template>
 
-        <form [formGroup]="clientForm" class="f-center">
-          <mat-form-field>
-            <input matInput placeholder="Имя">
-          </mat-form-field>
+        <form [formGroup]="clientForm" class="f-center f-column">
+          <div class="f-row">
+            <mat-form-field>
+              <input matInput formControlName="first_name" placeholder="Имя">
+            </mat-form-field>
 
-          <mat-form-field>
-            <input matInput placeholder="Фамилия">
-          </mat-form-field>
+            <mat-form-field>
+              <input matInput formControlName="last_name" placeholder="Фамилия">
+            </mat-form-field>
 
-          <mat-form-field>
-            <input matInput [matDatepicker]="picker" placeholder="Дата рождения" class="c-w">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
+            <mat-form-field>
+              <input matInput formControlName="email" placeholder="Email">
+            </mat-form-field>
+          </div>
+
+          <div class="f-row">
+            <mat-form-field>
+              <input matInput formControlName="birthday" [matDatepicker]="picker" placeholder="Дата рождения">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field formArrayName="payment">
+              <mat-label>Способ оплаты</mat-label>
+              <mat-select formControlName="type">
+                <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType">
+                  {{paymentType}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <mat-checkbox [checked]="agreeWithRules" (change)="setAgreeRules(!agreeWithRules)">
+            Я согласен с условиями покупки билета
+          </mat-checkbox>
         </form>
-        <div>
-          <button mat-button matStepperPrevious>Back</button>
-          <button mat-button (click)="stepper.reset()">Reset</button>
+        <div class="f-center" (click)="show()">
+          <button mat-raised-button matStepperPrevious>Назад</button>
+          <button mat-raised-button matStepperNext [disabled]="!agreeWithRules || clientForm.invalid">Оплатить</button>
         </div>
       </mat-step>
 
@@ -62,7 +85,7 @@
         You are now done.
         <div>
           <button mat-button matStepperPrevious>Назад</button>
-          <button mat-button (click)="stepper.reset()">Сброс</button>
+          <button mat-button matStepperNext>Оплатить</button>
         </div>
       </mat-step>
 

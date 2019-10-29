@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewEncapsulation} from '@angular/core';
 import {ThearteService} from '../core/services/thearte.service';
 import {IPerformanceItem, ISessionItem} from '../core/models/theatre.model';
-import { FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -12,10 +12,15 @@ import { FormControl, FormGroup, Validators} from '@angular/forms';
 export class AppComponent implements OnInit {
   title = 'Билет в театр';
 
+  paymentTypes = ['Наличными', 'Картой'];
+
+  agreeWithRules = false;
+
   clientForm: FormGroup;
 
   constructor(private theatreService: ThearteService) {
     this.clientForm = new FormGroup({
+        session: new FormControl(''),
         first_name: new FormControl('', [Validators.required]),
         last_name: new FormControl('', [Validators.required]),
         birthday: new FormControl('', [Validators.required]),
@@ -37,6 +42,14 @@ export class AppComponent implements OnInit {
     this.theatreService.getSessions().subscribe(data => {
       this.sessions = data.data;
     });
+  }
+
+  setAgreeRules(agreeRules) {
+    this.agreeWithRules = agreeRules;
+  }
+
+  show() {
+    console.log(': ', this.clientForm.getRawValue());
   }
 
 }
