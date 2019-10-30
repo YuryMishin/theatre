@@ -1,9 +1,9 @@
 <div class="main-bgd f-center">
   <div class="f-center">
-    <mat-horizontal-stepper [linear]="true" #stepper>
+    <mat-horizontal-stepper #stepper [selectedIndex]="this.stepperIndex">
       <mat-step>
         <ng-template matStepLabel>Выбор спектакля</ng-template>
-        <div style="display: flex;">
+        <div class="f-row">
           <ng-container *ngFor="let performance of performances">
             <mat-card class="ctn-performance">
               <mat-card-header>
@@ -20,8 +20,7 @@
               </mat-card-header>
               <mat-card-content>
                 <ng-container *ngFor="let session of sessions">
-                  <button *ngIf="performance.id === session.relationships.performance.data.id" mat-raised-button
-                          matStepperNext>
+                  <button *ngIf="performance.id === session.relationships.performance.data.id" mat-raised-button (click)="setSession(session.id)">
                     <span>{{session.attributes.from | date: 'longDate'}}</span><br>
                     <span>{{session.attributes.from | date: 'shortTime'}}
                       - {{session.attributes.to | date: 'shortTime'}}</span>
@@ -63,8 +62,8 @@
             <mat-form-field formArrayName="payment">
               <mat-label>Способ оплаты</mat-label>
               <mat-select formControlName="type">
-                <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType">
-                  {{paymentType}}
+                <mat-option *ngFor="let paymentType of paymentTypes" [value]="paymentType.value">
+                  {{paymentType.text}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -74,18 +73,45 @@
             Я согласен с условиями покупки билета
           </mat-checkbox>
         </form>
-        <div class="f-center" (click)="show()">
-          <button mat-raised-button matStepperPrevious>Назад</button>
-          <button mat-raised-button matStepperNext [disabled]="!agreeWithRules || clientForm.invalid">Оплатить</button>
+        <div class="f-center">
+          <button mat-raised-button matStepperPrevious color="warn">Назад</button>
+          <button mat-raised-button color="darkblue" [disabled]="!agreeWithRules || clientForm.invalid" (click)="stepper.next()">
+            Оплатить
+          </button>
         </div>
       </mat-step>
 
       <mat-step>
         <ng-template matStepLabel>Оплата</ng-template>
-        You are now done.
-        <div>
-          <button mat-button matStepperPrevious>Назад</button>
-          <button mat-button matStepperNext>Оплатить</button>
+        <div class="f-row f-center" *ngIf="clientForm.get('payment').get('type').value === 'card'">
+          <form [formGroup]="cardForm" class="f-column form-ctn">
+            <mat-form-field [style.width]="'270px'">
+              <input matInput formControlName="number" placeholder="Номер карты">
+            </mat-form-field>
+            <mat-form-field [style.width]="'100px'">
+              <input matInput formControlName="valid_thru" placeholder="Дата">
+            </mat-form-field>
+            <mat-form-field [style.width]="'200px'">
+              <input matInput formControlName="name" placeholder="Имя">
+            </mat-form-field>
+          </form>
+          <img src="../assets/personal_credit_card.png" alt="card" class="card-img">
+        </div>
+
+        <div *ngIf="clientForm.get('payment').get('type').value === 'cash'" class="f-center">
+          <span class="cash-label">Вы выбрали способ оплаты наличными.</span>
+        </div>
+        <div class="f-center">
+          <button mat-raised-button color="warn" matStepperPrevious>Назад</button>
+          <button mat-raised-button
+                  color="primary"
+                  (click)="submitForm()"
+                  [disabled]="clientForm.get('payment').get('type').value === 'card' ?
+                  cardForm.invalid :
+                  false">
+            Submit
+          </button>
+          <button mat-raised-button color="primary" (click)="badSubmitForm()" [disabled]="clientForm.get('payment').get('type').value === 'card' ? cardForm.invalid : false">Bad Submit</button>
         </div>
       </mat-step>
 

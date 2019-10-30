@@ -122,3 +122,16 @@ export const performances: IPerformance = {
   ]
 };
 
+
+export const errorResponce = {
+  errors_tree: {
+    data: {
+      birthday: ['unexpected format'],
+      payment: {
+        card: {
+          valid_thru: ['expired']
+        }
+      }
+    }
+  }
+};

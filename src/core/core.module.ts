@@ -7,6 +7,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatSelectModule} from '@angular/material/select';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import {LocalStorageService} from './services/localStorage.service';
 
 
 
@@ -40,6 +41,6 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     MatNativeDateModule,
     MatSelectModule,
     MatCheckboxModule,
-  ]
+  ],
 })
 export class CoreModule { }
