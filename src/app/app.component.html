@@ -82,37 +82,46 @@
       </mat-step>
 
       <mat-step>
-        <ng-template matStepLabel>Оплата</ng-template>
-        <div class="f-row f-center" *ngIf="clientForm.get('payment').get('type').value === 'card'">
-          <form [formGroup]="cardForm" class="f-column form-ctn">
-            <mat-form-field [style.width]="'270px'">
-              <input matInput formControlName="number" placeholder="Номер карты">
-            </mat-form-field>
-            <mat-form-field [style.width]="'100px'">
-              <input matInput formControlName="valid_thru" placeholder="Дата">
-            </mat-form-field>
-            <mat-form-field [style.width]="'200px'">
-              <input matInput formControlName="name" placeholder="Имя">
-            </mat-form-field>
-          </form>
-          <img src="../assets/personal_credit_card.png" alt="card" class="card-img">
-        </div>
 
-        <div *ngIf="clientForm.get('payment').get('type').value === 'cash'" class="f-center">
-          <span class="cash-label">Вы выбрали способ оплаты наличными.</span>
-        </div>
-        <div class="f-center">
-          <button mat-raised-button color="warn" matStepperPrevious>Назад</button>
-          <button mat-raised-button
-                  color="primary"
-                  (click)="submitForm()"
-                  [disabled]="clientForm.get('payment').get('type').value === 'card' ?
+        <div [style.position]="'relative'">
+          <div class="progress-bar" *ngIf="loading">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+          </div>
+
+          <ng-template matStepLabel>Оплата</ng-template>
+
+          <div class="f-row f-center" *ngIf="clientForm.get('payment').get('type').value === 'card'">
+            <form [formGroup]="cardForm" class="f-column form-ctn">
+              <mat-form-field [style.width]="'270px'">
+                <input matInput formControlName="number" placeholder="Номер карты">
+              </mat-form-field>
+              <mat-form-field [style.width]="'100px'">
+                <input matInput formControlName="valid_thru" placeholder="Дата">
+              </mat-form-field>
+              <mat-form-field [style.width]="'200px'">
+                <input matInput formControlName="name" placeholder="Имя">
+              </mat-form-field>
+            </form>
+            <img src="../assets/personal_credit_card.png" alt="card" class="card-img">
+          </div>
+
+          <div *ngIf="clientForm.get('payment').get('type').value === 'cash'" class="f-center">
+            <span class="cash-label">Вы выбрали способ оплаты наличными.</span>
+          </div>
+          <div class="f-center">
+            <button mat-raised-button color="warn" matStepperPrevious>Назад</button>
+            <button mat-raised-button
+                    color="primary"
+                    (click)="submitForm()"
+                    [disabled]="clientForm.get('payment').get('type').value === 'card' ?
                   cardForm.invalid :
                   false">
-            Submit
-          </button>
-          <button mat-raised-button color="primary" (click)="badSubmitForm()" [disabled]="clientForm.get('payment').get('type').value === 'card' ? cardForm.invalid : false">Bad Submit</button>
+              Submit
+            </button>
+            <button mat-raised-button color="primary" (click)="badSubmitForm()" [disabled]="clientForm.get('payment').get('type').value === 'card' ? cardForm.invalid : false">Bad Submit</button>
+          </div>
         </div>
+
       </mat-step>
 
     </mat-horizontal-stepper>

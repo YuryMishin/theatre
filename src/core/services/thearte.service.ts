@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
 
 import {errorResponce, performances, sessions} from '../mock-data';
 import { IPerformance, ISession } from '../models/theatre.model';
-import {delay} from 'rxjs/operators';
+import {delay, map} from 'rxjs/operators';
+import {HttpClient, HttpRequest, HttpResponse} from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -22,9 +23,9 @@ export class ThearteService {
   }
 
   bookOrder(form) {
-    return of(form).pipe(delay(2000));
+    return of(new HttpResponse({ status: 201, body: form })).pipe(delay(2000));
   }
   errorBookOrder(form) {
-    return of(errorResponce).pipe(delay(2000));
+    return throwError({ status: 400, error: errorResponce }).pipe(delay(2000));
   }
 }

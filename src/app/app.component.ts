@@ -4,6 +4,7 @@ import {IPerformanceItem, ISessionItem} from '../core/models/theatre.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatHorizontalStepper} from '@angular/material';
 import {LocalStorageService} from '../core/services/localStorage.service';
+import {Observable, throwError} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -107,7 +108,14 @@ export class AppComponent implements OnInit, AfterViewInit {
   badSubmitForm() {
     const resultForm = this.prepareForm();
     this.loading = true;
-    this.theatreService.errorBookOrder(resultForm).subscribe(() => this.loading = false);
+    this.theatreService.errorBookOrder(resultForm).subscribe(
+      () => {
+        this.loading = false;
+      },
+      err => {
+        console.log('Err: ', err);
+        this.loading = false;
+      });
   }
 
 }
