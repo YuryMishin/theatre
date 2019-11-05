@@ -127,7 +127,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   showError(errorData) {
     const errorObj = errorData.errors_tree.data;
     for (const errorKey in errorObj) {
-      const errorMessage =  errorKey === 'payment' ? 'Карта не действительна!' : `${errorKey} ${errorObj[errorKey]}`;
+      const errorMessage =  errorKey === 'payment' ? 'Карта не действительна!' : `Неправильный формат дня рождения!`;
       this.snackBarService.error(errorMessage);
     }
   }
