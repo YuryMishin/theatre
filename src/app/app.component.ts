@@ -4,7 +4,7 @@ import {IPerformanceItem, ISessionItem} from '../core/models/theatre.model';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MatHorizontalStepper} from '@angular/material';
 import {LocalStorageService} from '../core/services/localStorage.service';
-import {Observable, throwError} from 'rxjs';
+import {SnackBarService} from '../core/services/snackbar.service';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +29,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChild('stepper', {static: false}) stepper: MatHorizontalStepper;
 
   constructor(private theatreService: ThearteService,
+              private snackBarService: SnackBarService,
               private lSService: LocalStorageService) {
     const formData = this.lSService.getFormData();
     this.clientForm = new FormGroup({
@@ -102,7 +103,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   submitForm() {
     const resultForm = this.prepareForm();
     this.loading = true;
-    this.theatreService.bookOrder(resultForm).subscribe(() => this.loading = false);
+    this.theatreService.bookOrder(resultForm).subscribe(() => {
+      const message = this.clientForm.get('payment').get('type').value !== 'card' ?
+        'Вы успешно забронировали билет' :
+        'Вы успешно купили билет';
+      this.snackBarService.success(message);
+      this.loading = false;
+    });
   }
 
   badSubmitForm() {
@@ -112,10 +119,17 @@ export class AppComponent implements OnInit, AfterViewInit {
       () => {
         this.loading = false;
       },
-      err => {
-        console.log('Err: ', err);
+      errData => {
+        this.showError(errData.error);
         this.loading = false;
       });
+  }
+  showError(errorData) {
+    const errorObj = errorData.errors_tree.data;
+    for (const errorKey in errorObj) {
+      const errorMessage =  errorKey === 'payment' ? 'Карта не действительна!' : `${errorKey} ${errorObj[errorKey]}`;
+      this.snackBarService.error(errorMessage);
+    }
   }
 
 }

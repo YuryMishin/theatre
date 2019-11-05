@@ -8,6 +8,7 @@ import { SharedModule } from '../shared/shared.module';
 
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
+import {ToastrModule} from 'ngx-toastr';
 
 registerLocaleData(localeRu, 'ru');
 
@@ -20,6 +21,7 @@ registerLocaleData(localeRu, 'ru');
     BrowserAnimationsModule,
     CoreModule,
     SharedModule,
+    ToastrModule.forRoot()
   ],
   providers: [ { provide: LOCALE_ID, useValue: 'ru' }],
   bootstrap: [AppComponent]
